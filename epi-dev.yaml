@@ -1,4 +1,4 @@
-name: autoafids-dev
+name: epi-dev
 channels:
   - conda-forge
   - defaults
