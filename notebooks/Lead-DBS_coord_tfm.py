@@ -91,16 +91,16 @@ def coords_to_fcsv(coords_array, fcsv_output, target):
             '# Markups fiducial file version = 4.10',
             '# CoordinateSystem = RAS',
             '# columns = id,x,y,z,ow,ox,oy,oz,vis,sel,lock,label,desc,associatedNodeID',
-            '1,afid1_x,afid1_y,afid1_z,0,0,0,1,1,1,1,1,Right STN,vtkMRMLScalarVolumeNode1',
-            '2,afid2_x,afid2_y,afid2_z,0,0,0,1,1,1,1,2,Left STN ,vtkMRMLScalarVolumeNode1'
+            '1,afid1_x,afid1_y,afid1_z,0,0,0,1,1,1,1,1,R_CM,vtkMRMLScalarVolumeNode1',
+            '2,afid2_x,afid2_y,afid2_z,0,0,0,1,1,1,1,2,L_CM,vtkMRMLScalarVolumeNode1'
         ]
     elif target == 'ANT':
         fcsv = [
             '# Markups fiducial file version = 4.10',
             '# CoordinateSystem = RAS',
             '# columns = id,x,y,z,ow,ox,oy,oz,vis,sel,lock,label,desc,associatedNodeID',
-            '1,afid1_x,afid1_y,afid1_z,0,0,0,1,1,1,1,1,Right STN,vtkMRMLScalarVolumeNode1',
-            '2,afid2_x,afid2_y,afid2_z,0,0,0,1,1,1,1,2,Left STN ,vtkMRMLScalarVolumeNode1'
+            '1,afid1_x,afid1_y,afid1_z,0,0,0,1,1,1,1,1,R_ANT,vtkMRMLScalarVolumeNode1',
+            '2,afid2_x,afid2_y,afid2_z,0,0,0,1,1,1,1,2,L_ANT,vtkMRMLScalarVolumeNode1'
         ] 
 
     # Loop over fiducials
@@ -173,5 +173,5 @@ for ANALYSIS in ANALYSES:
             # Convert back to 3D coordinates by discarding the homogeneous component
             transformed_coordinates = transformed_homogeneous_coordinates[:, :3]
 
-        deform_fcsv = fiducial_file.replace("sub-MNI152NLin2009bAsym", f"{subject}").replace("groundtruth",ANALYSIS)
+        deform_fcsv = f'../transformed/{target}/sub-{subject}_desc-electrodefiducials_space-native.fcsv'
         coords_to_fcsv(transformed_coordinates,deform_fcsv, target)
