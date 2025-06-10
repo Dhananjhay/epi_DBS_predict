@@ -3,6 +3,7 @@ import pandas as pd
 import scipy.io
 import os
 import SimpleITK as sitk
+import glob
 
 def apply_affine_transform(mat_path, fcsv_path):
     """
@@ -145,7 +146,7 @@ for ANALYSIS in ANALYSES:
 
     for subject in SUBJECT_IDS:
         if subject in ['sub-P342', 'sub-P307']:
-            break
+            continue
 
         if subject in ['sub-P329','sub-P280','sub-P248','sub-P238','sub-P333','sub-P282','sub-P267', 'sub-P312']:
             target = 'CM'
@@ -154,14 +155,18 @@ for ANALYSIS in ANALYSES:
 
         print(subject)
 
-        transform_affine_path = f'{BASE_DIR}/{ANALYSIS}/{subject}/coregistration/transformations/{subject}_desc-precoreg_ax_T1w.mat' #specify moving to fixed bc function inverts the matrix
+        transform_affine_list = glob.glob(f'{BASE_DIR}/{ANALYSIS}/{subject}/coregistration/transformations/{subject}_desc-precoreg_*_T1w.mat')
+
         transform_warp_path = f'{BASE_DIR}/{ANALYSIS}/{subject}/normalization/transformations/{subject}_from-anchorNative_to-MNI152NLin2009bAsym_desc-ants.nii.gz' #because we need to take coordinate from native space to MNI we read the inverse matrix
         fiducial_file = f'/home/UWO/dbansal7/Desktop/epi_DBS_predict/cleaned_AT/{target}/{subject}_desc-electrodefiducials_cleaned.fcsv'
 
         transformed_coordinates = apply_warp_deformation(transform_warp_path, fiducial_file)
+        
+        print('anchornative_files',transform_affine_list)
 
-        if os.path.exists(transform_affine_path):
+        if len(transform_affine_list) != 0:
             print("found anchor native transformation")
+            transform_affine_path = transform_affine_list[0] #specify moving to fixed bc function inverts the matrix
             # Load the .mat file
             mat_contents = scipy.io.loadmat(transform_affine_path)
             # Extract the transformation matrix
