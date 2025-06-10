@@ -144,10 +144,10 @@ for ANALYSIS in ANALYSES:
     print(len(SUBJECT_IDS),SUBJECT_IDS)
 
     for subject in SUBJECT_IDS:
-        if subject in ['P342', 'P307']:
+        if subject in ['sub-P342', 'sub-P307']:
             break
 
-        if subject in ['P329','P280','P248','P238','P333','P282','P267']:
+        if subject in ['sub-P329','sub-P280','sub-P248','sub-P238','sub-P333','sub-P282','sub-P267', 'sub-P312']:
             target = 'CM'
         else:
             target = 'ANT'
@@ -156,8 +156,8 @@ for ANALYSIS in ANALYSES:
 
         transform_affine_path = f'{BASE_DIR}/{ANALYSIS}/{subject}/coregistration/transformations/{subject}_desc-precoreg_ax_T1w.mat' #specify moving to fixed bc function inverts the matrix
         transform_warp_path = f'{BASE_DIR}/{ANALYSIS}/{subject}/normalization/transformations/{subject}_from-anchorNative_to-MNI152NLin2009bAsym_desc-ants.nii.gz' #because we need to take coordinate from native space to MNI we read the inverse matrix
-        fiducial_file = f'../cleaned_AT/{target}/sub-{subject}_desc-electrodefiducials.fcsv'
-        
+        fiducial_file = f'/home/UWO/dbansal7/Desktop/epi_DBS_predict/cleaned_AT/{target}/{subject}_desc-electrodefiducials_cleaned.fcsv'
+
         transformed_coordinates = apply_warp_deformation(transform_warp_path, fiducial_file)
 
         if os.path.exists(transform_affine_path):
@@ -173,5 +173,5 @@ for ANALYSIS in ANALYSES:
             # Convert back to 3D coordinates by discarding the homogeneous component
             transformed_coordinates = transformed_homogeneous_coordinates[:, :3]
 
-        deform_fcsv = f'../transformed/{target}/sub-{subject}_desc-electrodefiducials_space-native.fcsv'
+        deform_fcsv = f'/home/UWO/dbansal7/Desktop/epi_DBS_predict/transformed/{target}/{subject}_desc-electrodefiducials_space-native.fcsv'
         coords_to_fcsv(transformed_coordinates,deform_fcsv, target)
